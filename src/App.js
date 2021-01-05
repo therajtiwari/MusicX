@@ -15,12 +15,13 @@ function App() {
   //state
   const [songs,setSongs]=useState(data());
   const [currSong,setCurrSong]=useState(songs[0]);
+  const [isPlaying,setIsPlaying]=useState(false);
 
   return (
     <div className="App">
      {/* <h1>Music Player</h1> */}
      <Song currSong={currSong} />
-     <Player currSong={currSong}/>
+     <Player currSong={currSong} isPlaying={isPlaying} setIsPlaying={setIsPlaying}/>
     </div>
   );
 }

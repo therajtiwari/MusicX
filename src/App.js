@@ -14,7 +14,7 @@ function App() {
 
   //state
   const [songs,setSongs]=useState(data());
-  const [currSong,setCurrSong]=useState(songs[0]);
+  // const [currSong,setCurrSong]=useState(songs[0]);
   const [isPlaying,setIsPlaying]=useState(false);
 
   return (

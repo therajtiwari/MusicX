@@ -1,4 +1,5 @@
 import React from "react";
+import { playAudio } from "./utils";
 
 const LibrarySong = ({
   song,
@@ -6,27 +7,16 @@ const LibrarySong = ({
   songs,
   audioRef,
   isPlaying,
+  setIsPlaying,
   setSongs,
 }) => {
-  const songSelectHandler = (e) => {
+  const songSelectHandler = async (e) => {
     // console.log("a");
     // console.log(e);
-    setCurrSong(song);
 
     // audioRef.current.play();
     // console.log(audioRef);
     // check if the song is playing
-    if (isPlaying) {
-      // making a promise so as to execute only after the loading is complete
-      const playPromise = audioRef.current.play();
-      console.log(audioRef.current.play());
-      console.log(playPromise);
-      if (playPromise !== undefined) {
-        playPromise.then(() => {
-          audioRef.current.play();
-        });
-      }
-    }
 
     //changing the active state if all the songs (setting the current one to true and rest all to false)
     const selectedSong = songs.map((esong) => {
@@ -36,13 +26,17 @@ const LibrarySong = ({
         return { ...esong, active: false };
       }
     });
+    // playAudio(audioRef, isPlaying);
+    //waits till not compleltely loaded
+    await setCurrSong(song);
+    audioRef.current.play();
+    setIsPlaying(true);
     //check the state of all the songs
-    setSongs(selectedSong);
   };
   return (
     <div
       onClick={songSelectHandler}
-      className={`library-song ${song.active ? "selected" : ""}`}
+      className={`library-song ${song.active ? "selected-song" : ""}`}
     >
       <img alt={song.name} src={song.cover}></img>
       <div className="info">

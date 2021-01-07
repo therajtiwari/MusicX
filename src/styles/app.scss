@@ -17,6 +17,23 @@ h4 {
   font-weight: 400;
   color: rgb(100, 100, 100);
 }
+
+.App {
+  transition: all 1s ease;
+  height: 100vh;
+}
+
+.library-active {
+  margin-left: 10%;
+}
+
+@media screen and (max-width: 550px) {
+  .library-active {
+    margin-top: 80%;
+    transition: all 1.5s ease;
+  }
+}
+
 @import "./player";
 @import "./song";
 @import "./library";

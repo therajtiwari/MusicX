@@ -4,8 +4,8 @@ import { faMusic } from "@fortawesome/free-solid-svg-icons";
 
 const Nav = ({ libraryState, setLibraryState }) => {
   return (
-    <nav className="navbar">
-      <h2>Buzzz</h2>
+    <nav className={`navbar ${libraryState ? "lib-selected" : ""}`}>
+      <h2>Buzzz Player</h2>
       <button
         onClick={() => {
           setLibraryState(!libraryState);

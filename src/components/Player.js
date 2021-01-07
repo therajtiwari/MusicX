@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlay,
@@ -6,6 +6,7 @@ import {
   faAngleLeft,
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
+import { playAudio } from "./utils";
 
 const Player = ({
   currSong,
@@ -14,8 +15,24 @@ const Player = ({
   audioRef,
   setSongInfo,
   songInfo,
+  songs,
+  setCurrSong,
+  setSongs,
 }) => {
   //Ref
+
+  //useeffect (with usestate this is always run when there is a change in the state of the given state variable( currSong in this case))
+  useEffect(() => {
+    const selectedSong = songs.map((song) => {
+      if (song.id === currSong.id) {
+        return { ...song, active: true };
+      } else {
+        return { ...song, active: false };
+      }
+    });
+    //check the state of all the songs
+    setSongs(selectedSong);
+  }, [currSong]);
 
   //event handlers
   const playSongHandler = () => {
@@ -53,30 +70,78 @@ const Player = ({
     setSongInfo({ ...songInfo, currentTime: e.target.value });
   };
 
+  //to skip forward and backward
+  const forBackHandler = async (direction) => {
+    let current = songs.findIndex((song) => song.id === currSong.id);
+    if (direction === "next") {
+      await setCurrSong(songs[(current + 1) % songs.length]);
+
+      // audioRef.current.play();
+    } else {
+      if (current - 1 === -1) {
+        current = songs.length;
+      }
+
+      await setCurrSong(songs[current - 1]);
+    }
+
+    if (isPlaying) audioRef.current.play();
+  };
+
+  const endHandler = async () => {
+    console.log("ended");
+    let current = songs.findIndex((song) => song.id === currSong.id);
+    await setCurrSong(songs[(current + 1) % songs.length]);
+    if (isPlaying) audioRef.current.play();
+  };
+
   //state
+
+  //styles
+  const musicbar = {
+    transform: `translateX(${songInfo.animationPercentage}%)`,
+  };
 
   return (
     <div className="player-container">
       <div className="time-control">
         <p>{getTime(songInfo.currentTime)}</p>
-        <input
-          min={0}
-          max={songInfo.duration || 0}
-          value={songInfo.currentTime}
-          onChange={dragHandler}
-          type="range"
-        />
+        <div className="track">
+          <input
+            style={{
+              background: `linear-gradient(to right,${currSong.color[0]},${currSong.color[1]})`,
+            }}
+            min={0}
+            max={songInfo.duration || 0}
+            value={songInfo.currentTime}
+            onChange={dragHandler}
+            onEnded={endHandler}
+            type="range"
+          />
+          <div style={musicbar} className="animate-track"></div>
+        </div>
+
         <p>{getTime(songInfo.duration)}</p>
       </div>
       <div className="play-control">
-        <FontAwesomeIcon className="previous" size="2x" icon={faAngleLeft} />
+        <FontAwesomeIcon
+          onClick={() => forBackHandler("back")}
+          className="previous"
+          size="2x"
+          icon={faAngleLeft}
+        />
         <FontAwesomeIcon
           onClick={playSongHandler}
           className="play"
           size="2x"
           icon={isPlaying ? faPause : faPlay}
         />
-        <FontAwesomeIcon className="next" size="2x" icon={faAngleRight} />
+        <FontAwesomeIcon
+          onClick={() => forBackHandler("next")}
+          className="next"
+          size="2x"
+          icon={faAngleRight}
+        />
       </div>
     </div>
   );

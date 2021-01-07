@@ -10,6 +10,7 @@ const Library = ({
   setSongs,
   setLibraryState,
   libraryState,
+  setIsPlaying,
 }) => {
   return (
     <div className={`library ${libraryState ? "selected" : ""}`}>
@@ -24,6 +25,7 @@ const Library = ({
             isPlaying={isPlaying}
             key={song.id}
             setSongs={setSongs}
+            setIsPlaying={setIsPlaying}
           />
         ))}
       </div>

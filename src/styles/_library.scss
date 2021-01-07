@@ -1,0 +1,42 @@
+.library {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 24rem;
+  height: 100%;
+  box-shadow: 2px 2px 50px gray;
+  background: white;
+  overflow: scroll;
+  transform: translate(-100%);
+  transition: all 0.8s ease;
+
+  h1 {
+    padding: 2rem;
+  }
+}
+
+.library-songs {
+  //   background-color: red;
+  display: flex;
+  flex-direction: column;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+}
+* ::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+* ::-webkit-scrollbar-thumb {
+  background-color: rbga(155, 155, 155, 0.5);
+}
+
+.selected {
+  transform: translate(-0);
+  transition: all 0.8s ease;
+}

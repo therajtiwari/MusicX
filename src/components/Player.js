@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlay,
@@ -7,10 +7,15 @@ import {
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
 
-const Player = ({ currSong, isPlaying, setIsPlaying }) => {
+const Player = ({
+  currSong,
+  isPlaying,
+  setIsPlaying,
+  audioRef,
+  setSongInfo,
+  songInfo,
+}) => {
   //Ref
-  const audioRef = useRef(null);
-
 
   //event handlers
   const playSongHandler = () => {
@@ -29,6 +34,11 @@ const Player = ({ currSong, isPlaying, setIsPlaying }) => {
       // isPlaying=true;
       setIsPlaying(false);
     }
+    // if (songInfo.currentTime === songInfo.duration) {
+    //   console.log("heuyyyyyyyy");
+    //   audioRef.current.pause();
+    //   setIsPlaying(false);
+    // }
   };
 
   const getTime = (time) => {
@@ -36,35 +46,26 @@ const Player = ({ currSong, isPlaying, setIsPlaying }) => {
       Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2)
     );
   };
-  const timeUpdateHandler = (e) => {
-    // console.log(audioRef.current.duration);
-    const time = (e.target.currentTime);
-    const tduration = (e.target.duration);
-    setSongInfo({ currentTime: (time), duration: (tduration) });
+
+  const dragHandler = (e) => {
+    //   console.log(e.target.value)
+    audioRef.current.currentTime = e.target.value;
+    setSongInfo({ ...songInfo, currentTime: e.target.value });
   };
 
-
-  const dragHandler=(e)=>{
-    //   console.log(e.target.value)
-    audioRef.current.currentTime=e.target.value;
-    setSongInfo({...songInfo,currentTime:e.target.value})
-  }
-
   //state
-  const [songInfo, setSongInfo] = useState({
-    currentTime: 0,
-    duration: 0,
-  });
+
   return (
     <div className="player-container">
       <div className="time-control">
         <p>{getTime(songInfo.currentTime)}</p>
-        <input 
-        min={0} 
-        max={songInfo.duration} 
-        value={songInfo.currentTime}  
-        onChange={dragHandler} 
-        type="range" />
+        <input
+          min={0}
+          max={songInfo.duration || 0}
+          value={songInfo.currentTime}
+          onChange={dragHandler}
+          type="range"
+        />
         <p>{getTime(songInfo.duration)}</p>
       </div>
       <div className="play-control">
@@ -73,18 +74,10 @@ const Player = ({ currSong, isPlaying, setIsPlaying }) => {
           onClick={playSongHandler}
           className="play"
           size="2x"
-          icon={isPlaying? faPlay: faPause}
+          icon={isPlaying ? faPause : faPlay}
         />
         <FontAwesomeIcon className="next" size="2x" icon={faAngleRight} />
       </div>
-      <audio
-        ref={audioRef}
-        onLoadedData={timeUpdateHandler}
-        onTimeUpdate={timeUpdateHandler}
-        src={currSong.audio}
-      >
-        errorrrr
-      </audio>
     </div>
   );
 };

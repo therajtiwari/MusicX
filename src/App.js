@@ -25,18 +25,17 @@ function App() {
   const [libraryState, setLibraryState] = useState(false);
 
   //event handlers
+
+  // to update the time of the track
   const timeUpdateHandler = (e) => {
-    // console.log(audioRef.current.duration);
-    
     const time = e.target.currentTime;
     const tduration = e.target.duration;
+
     //calculate percentage
     let roundedCurrent = Math.round(time);
     const roundtduration = Math.round(tduration);
-    roundedCurrent > 98 ? (roundedCurrent += 1) : (roundedCurrent += 0);
     const animPercentage = Math.round((roundedCurrent * 100) / roundtduration);
     // console.log(animPerentage);
-
     setSongInfo({
       currentTime: time,
       duration: tduration,
@@ -50,8 +49,9 @@ function App() {
     }
   };
 
+  // to play the next song
   const endHandler = async () => {
-    console.log("ended");
+    console.log("in app");
     let current = songs.findIndex((song) => song.id === currSong.id);
     await setCurrSong(songs[(current + 1) % songs.length]);
     audioRef.current.play();

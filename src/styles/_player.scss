@@ -1,25 +1,20 @@
 .player-container {
   min-height: 20vh;
-  // background-color: red;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  // margin: 20px;
-  // border: 3px solid red;
+ 
 }
 
 .time-control {
   padding-top: 5rem;
   width: 70%;
-  // max-width: 70%;
-  // border: 3px solid red;
-  // background-color: teal;
+ 
   display: flex;
   justify-content: space-between;
   input {
     width: 100%;
-    // padding: 1rem 0rem;
     -webkit-appearance: none;
 
     background: transparent;
@@ -36,7 +31,6 @@
 }
 
 .play-control {
-  // background-color: green;
 
   width: 50%;
   display: flex;
@@ -75,7 +69,6 @@ input[type="range"]::-webkit-slider-thumb {
   position: absolute;
   top: 0;
   left: 0;
-  // transform: translate(50%);
   pointer-events: none;
 }
 

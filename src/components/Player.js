@@ -18,6 +18,7 @@ const Player = ({
   setCurrSong,
   setSongs,
 }) => {
+  // to set the current selected song as active
   useEffect(() => {
     const selectedSong = songs.map((song) => {
       if (song.id === currSong.id) {
@@ -31,50 +32,44 @@ const Player = ({
   }, [currSong, setSongs]);
 
   //event handlers
+
+  // play pause the song
   const playSongHandler = () => {
-    //we need to use reference (useRef) to access html tags...cant do getElementby like vanilla JS
+    //we need to use reference (useRef) to access html tags...cant do getElementby as in vanilla JS
     if (!isPlaying) {
       audioRef.current.play();
       setIsPlaying(true);
     } else {
       audioRef.current.pause();
-
       setIsPlaying(false);
     }
   };
 
+  // get the current playtime of the song
   const getTime = (time) => {
     return (
       Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2)
     );
   };
 
+  // to handle the dragging of the range bar for jumping to a specific time
   const dragHandler = (e) => {
     audioRef.current.currentTime = e.target.value;
     setSongInfo({ ...songInfo, currentTime: e.target.value });
   };
 
-  //to skip forward and backward
+  //to go to the next and previous song
   const nextPrevHandler = async (direction) => {
     let current = songs.findIndex((song) => song.id === currSong.id);
     if (direction === "next") {
       await setCurrSong(songs[(current + 1) % songs.length]);
-
-      // audioRef.current.play();
     } else {
       if (current - 1 === -1) {
-        current = songs.length;
+        current = songs.length - 1;
       }
-
-      await setCurrSong(songs[current - 1]);
+      await setCurrSong(songs[current]);
     }
 
-    if (isPlaying) audioRef.current.play();
-  };
-
-  const endHandler = async () => {
-    let current = songs.findIndex((song) => song.id === currSong.id);
-    await setCurrSong(songs[(current + 1) % songs.length]);
     if (isPlaying) audioRef.current.play();
   };
 
@@ -96,7 +91,6 @@ const Player = ({
             max={songInfo.duration || 0}
             value={songInfo.currentTime}
             onChange={dragHandler}
-            onEnded={endHandler}
             type="range"
           />
           <div style={musicbar} className="animate-track"></div>

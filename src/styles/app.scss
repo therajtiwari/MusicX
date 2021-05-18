@@ -20,18 +20,24 @@ h4 {
 
 .App {
   transition: all 1s ease;
-  height: 100vh;
+  max-height: 100vh;
 }
 
 .library-active {
   margin-left: 10%;
+
 }
 
 @media screen and (max-width: 550px) {
   .library-active {
-    margin-top: 80%;
-    transition: all 1.5s ease;
+    position: absolute;
+    top:10vh;
+    transition: all 1s ease;
   }
+  .song-container{
+    width: 100%;
+  }
+
 }
 
 @import "./player";

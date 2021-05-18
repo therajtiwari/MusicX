@@ -27,6 +27,7 @@ function App() {
   //event handlers
   const timeUpdateHandler = (e) => {
     // console.log(audioRef.current.duration);
+    
     const time = e.target.currentTime;
     const tduration = e.target.duration;
     //calculate percentage
@@ -59,21 +60,22 @@ function App() {
 
   return (
     <div className={`App ${libraryState ? "library-active" : ""}`}>
-      {/* {console.log(setLibraryState)} */}
-      {/* {console.log(setCurrSong)} */}
       <Nav libraryState={libraryState} setLibraryState={setLibraryState} />
+
       <Song currSong={currSong} />
+
       <Player
         setSongInfo={setSongInfo}
+        songInfo={songInfo}
         audioRef={audioRef}
         currSong={currSong}
-        songInfo={songInfo}
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
         songs={songs}
         setCurrSong={setCurrSong}
         setSongs={setSongs}
       />
+
       <Library
         audioRef={audioRef}
         isPlaying={isPlaying}

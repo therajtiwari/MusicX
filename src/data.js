@@ -12,7 +12,7 @@ function all_songs() {
       active: true,
     },
     {
-      name: "Mocking Bird",
+      name: "Mockingbird",
       cover: "/assets/images/covers/encore.jpg",
       artist: "Eminem",
       audio: "/assets/song_mp3/mockingbird.mp3",

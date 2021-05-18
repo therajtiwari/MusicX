@@ -1,8 +1,6 @@
 .navbar {
   height: 10vh;
   width: 100%;
-  // position: fixed;
-  // background-color: #9de1f6;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -13,11 +11,14 @@
     border: none;
     cursor: pointer;
     border: 2px solid black;
-    padding: 0.75rem;
+    padding: 0.85rem;
     transition: all 0.5s ease;
 
     &:hover {
-      background: black;
+   
+      background-color: #3f0d12;
+      background-image: linear-gradient(315deg, #3f0d12 0%, #a71d31 74%);
+      border: 2px solid black;
       color: white;
     }
   }
@@ -25,15 +26,15 @@
 
 @media screen and (max-width: 550px) {
   .lib-selected {
-    // color: red;
-
     background-color: white;
     position: fixed;
     z-index: 2;
     top: 0;
     left: 0;
     button {
-      background: black;
+      background-color: #3f0d12;
+      background-image: linear-gradient(315deg, #3f0d12 0%, #a71d31 74%);
+      border: 2px solid black;
       color: white;
       transition: all 0.1s ease;
     }

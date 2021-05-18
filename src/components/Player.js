@@ -6,7 +6,6 @@ import {
   faAngleLeft,
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
-import { playAudio } from "./utils";
 
 const Player = ({
   currSong,
@@ -19,9 +18,6 @@ const Player = ({
   setCurrSong,
   setSongs,
 }) => {
-  //Ref
-
-  //useeffect (with usestate this is always run when there is a change in the state of the given state variable( currSong in this case))
   useEffect(() => {
     const selectedSong = songs.map((song) => {
       if (song.id === currSong.id) {
@@ -30,32 +26,21 @@ const Player = ({
         return { ...song, active: false };
       }
     });
-    //check the state of all the songs
     setSongs(selectedSong);
-  }, [currSong]);
+    console.log(songs);
+  }, [currSong, setSongs]);
 
   //event handlers
   const playSongHandler = () => {
     //we need to use reference (useRef) to access html tags...cant do getElementby like vanilla JS
-    // audioRef.current.play();
-    // console.log(isPlaying);
-    // console.log(setIsPlaying);
     if (!isPlaying) {
       audioRef.current.play();
-      // setIsPlaying(!isPlaying);
-      // isPlaying=false;  //is playing is not a normal variable that u can change like this ....its a state so it can be changed only by using setIsPlaing
       setIsPlaying(true);
     } else {
       audioRef.current.pause();
-      // setIsPlaying(!isPlaying);
-      // isPlaying=true;
+
       setIsPlaying(false);
     }
-    // if (songInfo.currentTime === songInfo.duration) {
-    //   console.log("heuyyyyyyyy");
-    //   audioRef.current.pause();
-    //   setIsPlaying(false);
-    // }
   };
 
   const getTime = (time) => {
@@ -65,13 +50,12 @@ const Player = ({
   };
 
   const dragHandler = (e) => {
-    //   console.log(e.target.value)
     audioRef.current.currentTime = e.target.value;
     setSongInfo({ ...songInfo, currentTime: e.target.value });
   };
 
   //to skip forward and backward
-  const forBackHandler = async (direction) => {
+  const nextPrevHandler = async (direction) => {
     let current = songs.findIndex((song) => song.id === currSong.id);
     if (direction === "next") {
       await setCurrSong(songs[(current + 1) % songs.length]);
@@ -89,13 +73,10 @@ const Player = ({
   };
 
   const endHandler = async () => {
-    console.log("ended");
     let current = songs.findIndex((song) => song.id === currSong.id);
     await setCurrSong(songs[(current + 1) % songs.length]);
     if (isPlaying) audioRef.current.play();
   };
-
-  //state
 
   //styles
   const musicbar = {
@@ -125,7 +106,7 @@ const Player = ({
       </div>
       <div className="play-control">
         <FontAwesomeIcon
-          onClick={() => forBackHandler("back")}
+          onClick={() => nextPrevHandler("back")}
           className="previous"
           size="2x"
           icon={faAngleLeft}
@@ -137,7 +118,7 @@ const Player = ({
           icon={isPlaying ? faPause : faPlay}
         />
         <FontAwesomeIcon
-          onClick={() => forBackHandler("next")}
+          onClick={() => nextPrevHandler("next")}
           className="next"
           size="2x"
           icon={faAngleRight}

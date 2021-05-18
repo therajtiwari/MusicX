@@ -26,6 +26,7 @@ const Player = ({
 }) => {
   // to set the current selected song as active
   const allsongs = JSON.parse(JSON.stringify(songs));
+
   useEffect(() => {
     const selectedSong = allsongs.map((song) => {
       if (song.id === currSong.id) {
@@ -34,7 +35,7 @@ const Player = ({
         return { ...song, active: false };
       }
     });
-    setSongs(selectedSong);
+    setSongs(selectedSong); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currSong, setSongs]);
 
   //event handlers

@@ -8,15 +8,17 @@ import Song from "./components/Song";
 import Library from "./components/Library";
 import Nav from "./components/Nav";
 //import Util
-import data from "./data";
+import allSongs from "./data";
 
 function App() {
   //Ref
   const audioRef = useRef(null);
   //state
-  const [songs, setSongs] = useState(data());
+  const [songs, setSongs] = useState(allSongs);
   const [currSong, setCurrSong] = useState(songs[0]);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isOnLoop, setonLoop] = useState(false);
+  const [isOnShuffle, setOnShuffle] = useState(false);
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
     duration: 0,
@@ -30,7 +32,6 @@ function App() {
   const timeUpdateHandler = (e) => {
     const time = e.target.currentTime;
     const tduration = e.target.duration;
-
     //calculate percentage
     let roundedCurrent = Math.round(time);
     const roundtduration = Math.round(tduration);
@@ -43,7 +44,6 @@ function App() {
     });
 
     if (time === songInfo.duration) {
-      // console.log("song completed");
       audioRef.current.pause();
       setIsPlaying(false);
     }
@@ -51,9 +51,20 @@ function App() {
 
   // to play the next song
   const endHandler = async () => {
-    console.log("in app");
     let current = songs.findIndex((song) => song.id === currSong.id);
-    await setCurrSong(songs[(current + 1) % songs.length]);
+    if (!isOnLoop) {
+      if (!isOnShuffle) {
+        await setCurrSong(songs[(current + 1) % songs.length]);
+      } else {
+        let randomNumber = current;
+        while (randomNumber === current)
+          randomNumber = Math.floor(Math.random() * songs.length);
+        await setCurrSong(songs[randomNumber]);
+      }
+    } else {
+      await setCurrSong(songs[current % songs.length]);
+    }
+
     audioRef.current.play();
     setIsPlaying(true);
   };
@@ -74,6 +85,10 @@ function App() {
         songs={songs}
         setCurrSong={setCurrSong}
         setSongs={setSongs}
+        isOnLoop={isOnLoop}
+        setonLoop={setonLoop}
+        setOnShuffle={setOnShuffle}
+        isOnShuffle={isOnShuffle}
       />
 
       <Library

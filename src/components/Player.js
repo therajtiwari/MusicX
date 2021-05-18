@@ -5,6 +5,8 @@ import {
   faAngleRight,
   faAngleLeft,
   faPause,
+  faRedoAlt,
+  faRandom,
 } from "@fortawesome/free-solid-svg-icons";
 
 const Player = ({
@@ -17,10 +19,15 @@ const Player = ({
   songs,
   setCurrSong,
   setSongs,
+  isOnLoop,
+  setonLoop,
+  setOnShuffle,
+  isOnShuffle,
 }) => {
   // to set the current selected song as active
+  const allsongs = JSON.parse(JSON.stringify(songs));
   useEffect(() => {
-    const selectedSong = songs.map((song) => {
+    const selectedSong = allsongs.map((song) => {
       if (song.id === currSong.id) {
         return { ...song, active: true };
       } else {
@@ -28,7 +35,6 @@ const Player = ({
       }
     });
     setSongs(selectedSong);
-    console.log(songs);
   }, [currSong, setSongs]);
 
   //event handlers
@@ -61,18 +67,33 @@ const Player = ({
   //to go to the next and previous song
   const nextPrevHandler = async (direction) => {
     let current = songs.findIndex((song) => song.id === currSong.id);
-    if (direction === "next") {
-      await setCurrSong(songs[(current + 1) % songs.length]);
+
+    if (isOnShuffle) {
+      let randomNumber = current;
+      while (randomNumber === current)
+        randomNumber = Math.floor(Math.random() * songs.length);
+      await setCurrSong(songs[randomNumber]);
     } else {
-      if (current - 1 === -1) {
-        current = songs.length - 1;
+      if (direction === "next") {
+        await setCurrSong(songs[(current + 1) % songs.length]);
+      } else {
+        if (current - 1 === -1) {
+          current = songs.length;
+        }
+        await setCurrSong(songs[current - 1]);
       }
-      await setCurrSong(songs[current]);
     }
 
     if (isPlaying) audioRef.current.play();
   };
 
+  const repeatHandler = () => {
+    setonLoop(!isOnLoop);
+  };
+
+  const shuffleHandler = () => {
+    setOnShuffle(!isOnShuffle);
+  };
   //styles
   const musicbar = {
     transform: `translateX(${songInfo.animationPercentage}%)`,
@@ -84,6 +105,7 @@ const Player = ({
         <p>{getTime(songInfo.currentTime)}</p>
         <div className="track">
           <input
+            name="track-range"
             style={{
               background: `linear-gradient(to right,${currSong.color[0]},${currSong.color[1]})`,
             }}
@@ -99,6 +121,14 @@ const Player = ({
         <p>{getTime(songInfo.duration)}</p>
       </div>
       <div className="play-control">
+        <FontAwesomeIcon
+          onClick={() => repeatHandler()}
+          className="loop"
+          size="2x"
+          icon={faRedoAlt}
+          style={isOnLoop ? { color: currSong.color[0] } : { color: "black" }}
+        />
+
         <FontAwesomeIcon
           onClick={() => nextPrevHandler("back")}
           className="previous"
@@ -116,6 +146,15 @@ const Player = ({
           className="next"
           size="2x"
           icon={faAngleRight}
+        />
+        <FontAwesomeIcon
+          onClick={() => shuffleHandler("back")}
+          className="shuffle"
+          size="2x"
+          icon={faRandom}
+          style={
+            isOnShuffle ? { color: currSong.color[0] } : { color: "black" }
+          }
         />
       </div>
     </div>
